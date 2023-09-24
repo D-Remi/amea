@@ -1,0 +1,12 @@
+easy_admin:
+    entities:
+        Inscription:
+            class: App\Entity\Inscription
+            label: Inscriptions
+            list:
+                # ...
+
+                # Ajoutez des champs de l'entité Paiement
+                - { property: 'paiement.moyen', label: 'Moyen de Paiement' }
+                - { property: 'paiement.quantite', label: 'Quantité' }
+                - { property: 'paiement.amount', label: 'Montant' }

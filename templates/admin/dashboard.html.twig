@@ -1,0 +1,15 @@
+{# Comment #}
+{% extends '@EasyAdmin/layout.html.twig' %} 
+
+
+{% block content %}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    <h1 class="mb-4">Administration</h1>
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+{% endblock %}
