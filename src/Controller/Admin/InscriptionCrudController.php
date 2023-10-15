@@ -43,65 +43,49 @@ class InscriptionCrudController extends AbstractCrudController
         return [
             AssociationField::new('eleve','eleve'),
             AssociationField::new('cours','cours'),
-            NumberField::new('montant'),
-            ChoiceField::new('moyenPaiement','Moyen de paiement')->setChoices(['cheque' => "cheque",'espece'=> 'espece', 'hello-asso' => 'hello-asso'])->onlyOnForms(),
-            NumberField::new('quantite', 'Quantité')->onlyOnForms(),
-            NumberField::new('amount', 'Montant')->onlyOnForms(),
-            
-
-            // only detail And Index
-            TextField::new('moyenPaiement', 'Moyens de paiement')
-                ->hideOnForm()
-                ->formatValue(function ($value, $entity) {
-                    return $this->getMoyenPaiementForInscription($entity);
-                }),
-
-            TextField::new('amount', 'Montant du paiement')
-                ->hideOnForm()
-                ->formatValue(function ($value, $entity) {
-                    return $this->getAmountForInscription($entity);
-                }),
-            
+            NumberField::new('montant','montant total'),
+          
             TextField::new('quantite', 'Nombre de paiement')
                 ->hideOnForm()
                 ->formatValue(function ($value, $entity) {
                     return $this->getQuantiteForInscription($entity);
+                }),
+                
+            TextField::new('amount', 'Restant du')
+                ->hideOnForm()
+                ->formatValue(function ($value, $entity) {
+                    return $this->getRestant($entity);
                 }), 
+
 
         ];
     }
 
-    private function getMoyenPaiementForInscription($inscription)
+    private function getRestant($inscription)
     {
-        $paiement = $this->entityManager->getRepository(Paiement::class)->findOneBy(['inscription' => $inscription]);
+        $montant = $inscription->getMontant();
 
-        if ($paiement) {
-            return $paiement->getMoyen();
+        $paiements = $this->entityManager->getRepository(Paiement::class)->findBy(['inscription' => $inscription]);
+
+        $totalPaymentAmount = 0;
+        foreach ($paiements as $paiement) {
+            $totalPaymentAmount += $paiement->getAmount();
         }
 
-        return 'Non défini';
-    }
+        // Calculate and return the remaining amount
+        $restant = $montant - $totalPaymentAmount;
 
-    private function getAmountForInscription($inscription)
-    {
-        $paiement = $this->entityManager->getRepository(Paiement::class)->findOneBy(['inscription' => $inscription]);
-
-        if ($paiement) {
-            return $paiement->getAmount();
-        }
-
-        return 'Non défini';
+        return $restant;
     }
 
     private function getQuantiteForInscription($inscription)
     {
-        $paiement = $this->entityManager->getRepository(Paiement::class)->findOneBy(['inscription' => $inscription]);
-
+        $paiement = $this->entityManager->getRepository(Paiement::class)->findBy(['inscription' => $inscription]);
         if ($paiement) {
-            return $paiement->getQuantite();
+            return count($paiement);
         }
 
-        return 'Non défini';
+        return 'Aucun';
     }
 
 }

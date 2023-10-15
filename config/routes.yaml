@@ -3,3 +3,8 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+date_list:
+    path: '/admin/date/list'
+    controller: 'App\Controller\Admin\DateCrudController::index'
+    methods: ['GET']

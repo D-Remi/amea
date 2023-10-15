@@ -21,9 +21,6 @@ class Paiement
     #[ORM\Column(length: 255)]
     private ?string $moyen = null;
 
-    #[ORM\Column]
-    private ?float $quantite = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
@@ -52,18 +49,6 @@ class Paiement
     public function setMoyen(string $moyen): self
     {
         $this->moyen = $moyen;
-
-        return $this;
-    }
-
-    public function getQuantite(): ?float
-    {
-        return $this->quantite;
-    }
-
-    public function setQuantite(float $quantite): self
-    {
-        $this->quantite = $quantite;
 
         return $this;
     }

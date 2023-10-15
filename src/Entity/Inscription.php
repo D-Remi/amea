@@ -47,6 +47,12 @@ class Inscription
         $this->paiements = new ArrayCollection();
     }
 
+
+    public function __toString(): string
+    {
+        return $this->id . '-' . $this->eleve . '-' . $this->cours . "- montant restant =" . $this->getRestant();
+    }
+
     public function setMoyenPaiement($moyenPaiement)
     {
         $this->moyenPaiement = $moyenPaiement;
@@ -148,4 +154,14 @@ class Inscription
         return $this;
     }
 
+    public function getRestant()
+    {
+        $totalPaiements = 0;
+
+        foreach ($this->paiements as $paiement) {
+            $totalPaiements += $paiement->getAmount();
+        }
+
+        return $this->montant - $totalPaiements;
+    }
 }

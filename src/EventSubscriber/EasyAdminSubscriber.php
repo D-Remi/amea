@@ -22,26 +22,26 @@ class EasyAdminSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            AfterEntityPersistedEvent::class => ['setPaiementAfterInscription'],
+            //AfterEntityPersistedEvent::class => ['setPaiementAfterInscription'],
         ];
     }
 
-    public function setPaiementAfterInscription(AfterEntityPersistedEvent $event)
-    {
-        $entity = $event->getEntityInstance();
+    // public function setPaiementAfterInscription(AfterEntityPersistedEvent $event)
+    // {
+    //     $entity = $event->getEntityInstance();
 
-        if (!($entity instanceof Inscription)) {
-            return;
-        }
+    //     if (!($entity instanceof Inscription)) {
+    //         return;
+    //     }
 
-        $paiement = new Paiement();
-        $paiement->setMoyen($entity->getMoyenPaiement());
-        $paiement->setQuantite($entity->getQuantite());
-        $paiement->setAmount($entity->getAmount());
-        $paiement->setInscription($entity);
+    //     $paiement = new Paiement();
+    //     $paiement->setMoyen($entity->getMoyenPaiement());
+    //     $paiement->setQuantite($entity->getQuantite());
+    //     $paiement->setAmount($entity->getAmount());
+    //     $paiement->setInscription($entity);
 
-        $this->objectManager->persist($paiement);
-        $this->objectManager->flush();
+    //     $this->objectManager->persist($paiement);
+    //     $this->objectManager->flush();
         
-    }
+    // }
 }

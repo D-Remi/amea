@@ -16,9 +16,6 @@ class Presence
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date = null;
-
     #[ORM\ManyToOne(inversedBy: 'presences')]
     private ?Cours $nom = null;
     
@@ -32,10 +29,15 @@ class Presence
      */
     #[ORM\Column]
     private ?int $statut = null;
+    /**
+     * @Groups({"presence"})
+     */
+    #[ORM\ManyToOne(inversedBy: 'presences')]
+    private ?date $date = null;
 
     public function __construct()
     {
-        $this->date = new DateTime();
+       //
     }
 
 
@@ -44,17 +46,6 @@ class Presence
         return $this->id;
     }
 
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeInterface $date): self
-    {
-        $this->date = $date;
-
-        return $this;
-    }
 
     public function getNom(): ?Cours
     {
@@ -88,6 +79,18 @@ class Presence
     public function setStatut(int $statut): self
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    public function getDate(): ?date
+    {
+        return $this->date;
+    }
+
+    public function setDate(?date $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }

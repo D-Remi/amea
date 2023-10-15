@@ -1,5 +1,18 @@
 easy_admin:
     entities:
+        Date:
+            class: App\Entity\Date
+            label: Dates
+            # ... Autres configurations ...
+            list:
+                actions:
+                    - { name: 'delete' }
+                    - { name: 'generate_dates', label: 'Générer Dates', icon: 'plus' }
+
+            edit: # Ajoutez cette section pour désactiver l'action Edit
+                disabled: true
+            new:
+                disabled: true
         Inscription:
             class: App\Entity\Inscription
             label: Inscriptions

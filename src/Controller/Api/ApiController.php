@@ -6,6 +6,7 @@ namespace App\Controller\Api;
 use App\Entity\Eleve;
 use App\Entity\Presence;
 use App\Entity\Inscription;
+use App\Repository\DateRepository;
 use App\Repository\CoursRepository;
 use App\Repository\EleveRepository;
 use App\Repository\PresenceRepository;
@@ -69,7 +70,13 @@ class ApiController extends AbstractController
 	 * return all cours of amea
 	*/
 	#[Route(path: '/presence/create', name: 'app_api_presence_create')]
-	public function createPresence(Request $request, EntityManagerInterface $entity,EleveRepository $eleveRepository,CoursRepository $coursRepository,PresenceRepository $presenceRepository)
+	public function createPresence(Request $request, 
+		EntityManagerInterface $entity,
+		EleveRepository $eleveRepository,
+		CoursRepository $coursRepository,
+		PresenceRepository $presenceRepository,
+		DateRepository $dateRepository
+		)
 	{
 		
 		$data = json_decode($request->getContent(), true);
@@ -77,17 +84,26 @@ class ApiController extends AbstractController
 		$eleve = $eleveRepository->find($data['eleve']);
 		$cours = $coursRepository->find($data['cours']);
 		
-		$presence = $presenceRepository->findBy(['nom' => $data['cours'],'eleve' => $data['eleve']]);
+		$date = $dateRepository->find($data['date']);
+		
+		$presence = $presenceRepository->findBy(['nom' => $data['cours'],'eleve' => $data['eleve'], 'date' => $data['date']]);
 
 		if($presence) {
-			$response = new Response('deja present', 200);
+			
+			if($data['status'] == false) {
+				$entity->remove($presence['0']);
+				$entity->flush();
+				$response = new Response('absent', 200);
+			}else{
+				$response = new Response('deja present', 200);
+			}
 		}else {
 
 			$presence = new Presence();
 			$presence->setEleve($eleve);
 			$presence->setNom($cours);
 			$presence->setStatut(1);
-
+			$presence->setDate($date);
 			$entity->persist($presence);
 			
 			$entity->flush();
@@ -106,7 +122,7 @@ class ApiController extends AbstractController
 		
 		$data = json_decode($request->getContent(), true);
 		
-		$presence = $presenceRepository->findBy(['nom' => $data['cours']]);
+		$presence = $presenceRepository->findBy(['nom' => $data['cours'], 'date' => $data['date']]);
 
 		return new Response(
 			$serializer->serialize($presence, 'json', ['groups' => 'presence']),
@@ -119,12 +135,19 @@ class ApiController extends AbstractController
 	 * create eleve
 	*/
 	#[Route(path: '/eleve/create', name: 'app_api_eleve_create')]
-	public function createEleve(Request $request, EntityManagerInterface $entity,EleveRepository $eleveRepository,CoursRepository $coursRepository)
+	public function createEleve(Request $request, 
+		EntityManagerInterface $entity,
+		EleveRepository $eleveRepository,
+		CoursRepository $coursRepository,
+		DateRepository $dateRepository
+		)
 	{
 		
 		$data = json_decode($request->getContent(), true);
 
 		$cours = $coursRepository->find($data['cours']);
+
+		$date = $dateRepository->find($data['date']);
 
 		$eleve = new Eleve();
 		$eleve->setName($data['eleve']['name']);
@@ -140,10 +163,36 @@ class ApiController extends AbstractController
 		$inscription->setMontant(0);
 		$entity->persist($inscription);
 		
+
+		$presence = new Presence();
+		$presence->setEleve($eleve);
+		$presence->setNom($cours);
+		$presence->setStatut(1);
+		$presence->setDate($date);
+		$entity->persist($presence);
+
 		$entity->flush();
 	
 		return new Response('ok', 200);
 	}
 
+	/**
+	 * choix date
+	*/
+	#[Route(path: '/date', name: 'app_api_date')]
+	public function getDate(SerializerInterface $serializer,DateRepository $dateRepository)
+	{
 
+		$dates = $dateRepository->findAll();
+
+		if (!$dates) {
+			return new Response('Aucune date trouvée', 200);
+		}
+
+		return new Response(
+			$serializer->serialize($dates, 'json', ['groups' => 'date']),
+			200,
+			['Content-Type' => 'application/json']
+		);
+	}
 }

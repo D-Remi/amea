@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Modal, Button, Form } from 'react-bootstrap';
 
-const AddStudentModal = ({ isOpen, onClose, coursId }) => {
+const AddStudentModal = ({ isOpen, onClose, coursId, dateId, fetchInscription }) => {
     const [studentData, setStudentData] = useState({
         name: '',
         firstname: '',
@@ -12,10 +12,11 @@ const AddStudentModal = ({ isOpen, onClose, coursId }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('/api/eleve/create', { eleve: studentData, cours: coursId })
+        axios.post('/api/eleve/create', { eleve: studentData, cours: coursId, date: dateId })
             .then((response) => {
                 if(response.data == 'ok'){
                     onClose();
+                    fetchInscription()
                 }
             })
     };
