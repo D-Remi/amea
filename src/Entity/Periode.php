@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\DateRepository;
+use App\Repository\PeriodeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 
-#[ORM\Entity(repositoryClass: DateRepository::class)]
-class Date
+#[ORM\Entity(repositoryClass: PeriodeRepository::class)]
+class Periode
 {   
       /**
      * @Groups({"date"})
@@ -26,7 +26,7 @@ class Date
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
-    #[ORM\OneToMany(mappedBy: 'date', targetEntity: Presence::class)]
+    #[ORM\OneToMany(mappedBy: 'periode', targetEntity: Presence::class)]
     private Collection $presences;
 
     public function __construct()

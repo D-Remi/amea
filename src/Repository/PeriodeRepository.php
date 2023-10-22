@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Date;
+use App\Entity\Periode;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Date>
+ * @extends ServiceEntityRepository<Periode>
  *
- * @method Date|null find($id, $lockMode = null, $lockVersion = null)
- * @method Date|null findOneBy(array $criteria, array $orderBy = null)
- * @method Date[]    findAll()
- * @method Date[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Periode|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Periode|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Periode[]    findAll()
+ * @method Periode[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class DateRepository extends ServiceEntityRepository
+class PeriodeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Date::class);
+        parent::__construct($registry, Periode::class);
     }
 
-    public function save(Date $entity, bool $flush = false): void
+    public function save(Periode $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class DateRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Date $entity, bool $flush = false): void
+    public function remove(Periode $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 

@@ -2,46 +2,59 @@
 
 namespace App\EventSubscriber;
 
-use App\Entity\Paiement;
-use App\Entity\Inscription;
-use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityPersistedEvent;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
+use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class EasyAdminSubscriber implements EventSubscriberInterface
 {
-   
-    private $objectManager;
+    private $entityManager;
+    private $passwordHasher;
 
-    public function __construct(ObjectManager $objectManager)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher)
     {
-        $this->objectManager = $objectManager;
+        $this->entityManager = $entityManager;
+        $this->passwordHasher = $passwordHasher;
     }
-    
+
     public static function getSubscribedEvents()
     {
         return [
-            //AfterEntityPersistedEvent::class => ['setPaiementAfterInscription'],
+            BeforeEntityPersistedEvent::class => ['addUser'],
+            BeforeEntityUpdatedEvent::class => ['updateUser'],
         ];
     }
 
-    // public function setPaiementAfterInscription(AfterEntityPersistedEvent $event)
-    // {
-    //     $entity = $event->getEntityInstance();
+    public function updateUser(BeforeEntityUpdatedEvent $event)
+    {
+        $entity = $event->getEntityInstance();
 
-    //     if (!($entity instanceof Inscription)) {
-    //         return;
-    //     }
+        if (!($entity instanceof User)) {
+            return;
+        }
+        $this->setPassword($entity);
+    }
 
-    //     $paiement = new Paiement();
-    //     $paiement->setMoyen($entity->getMoyenPaiement());
-    //     $paiement->setQuantite($entity->getQuantite());
-    //     $paiement->setAmount($entity->getAmount());
-    //     $paiement->setInscription($entity);
+    public function addUser(BeforeEntityPersistedEvent $event)
+    {
+        $entity = $event->getEntityInstance();
 
-    //     $this->objectManager->persist($paiement);
-    //     $this->objectManager->flush();
-        
-    // }
+        if (!($entity instanceof User)) {
+            return;
+        }
+        $this->setPassword($entity);
+    }
+
+    public function setPassword(User $entity): void
+    {
+        $plainPassword = $entity->getPassword();
+
+        if ($plainPassword !== null) {
+            $hashedPassword = $this->passwordHasher->hashPassword($entity, $plainPassword);
+            $entity->setPassword($hashedPassword);
+        }
+    }
 }

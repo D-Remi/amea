@@ -2,11 +2,13 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Date;
+use App\Entity\Periode;
 use App\Entity\Cours;
 use App\Entity\Eleve;
 use App\Entity\Paiement;
 use App\Entity\Inscription;
+use App\Entity\Presence;
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -30,10 +32,12 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToCrud('Utilisateur Admin', 'fas fa-user', User::class);
         yield MenuItem::linkToCrud('Eleve', 'fas fa-user', Eleve::class);
         yield MenuItem::linkToCrud('Cours', 'fas fa-user', Cours::class);
         yield MenuItem::linkToCrud('Inscription', 'fas fa-user', Inscription::class);
         yield MenuItem::linkToCrud('Paiement', 'fas fa-user', Paiement::class);
-        yield MenuItem::linkToCrud('Dates', 'fas fa-user', Date::class);
+        yield MenuItem::linkToCrud('Dates', 'fas fa-user', Periode::class);
+        yield MenuItem::linkToCrud('Presence', 'fas fa-user', Presence::class);
     }
 }

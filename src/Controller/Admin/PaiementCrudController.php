@@ -41,7 +41,7 @@ class PaiementCrudController extends AbstractCrudController
             // only forms
             AssociationField::new('inscription','eleve')->onlyOnforms(),
             NumberField::new('amount','montant du paiement'),
-            ChoiceField::new('moyen','Moyen de paiement')->setChoices(['cheque' => "cheque",'espece'=> 'espece', 'hello-asso' => 'hello-asso'])->onlyOnForms(),
+            ChoiceField::new('moyen','Moyen de paiement')->setChoices(['cheque' => "cheque",'espece'=> 'espece', 'hello-asso' => 'hello-asso', 'cheque-vacance' => 'cheque-vacance', 'cheque-sport' => 'cheque-sport', 'cheque-loisirs' => 'cheque-loisirs'])->onlyOnForms(),
             // only detail
 
         ];

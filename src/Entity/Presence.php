@@ -33,7 +33,7 @@ class Presence
      * @Groups({"presence"})
      */
     #[ORM\ManyToOne(inversedBy: 'presences')]
-    private ?date $date = null;
+    private ?Periode $date = null;
 
     public function __construct()
     {
@@ -83,12 +83,12 @@ class Presence
         return $this;
     }
 
-    public function getDate(): ?date
+    public function getDate(): ?Periode
     {
         return $this->date;
     }
 
-    public function setDate(?date $date): self
+    public function setDate(?Periode $date): self
     {
         $this->date = $date;
 

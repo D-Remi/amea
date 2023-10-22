@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Eleve
 {
     /**
-     * @Groups({"inscription","presence"})
+     * @Groups({"inscription","presence","eleves"})
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,12 +20,12 @@ class Eleve
     private ?int $id = null;
 
     /**
-     * @Groups({"inscription"})
+     * @Groups({"inscription","eleves"})
      */
     #[ORM\Column(length: 255)]
     private ?string $name = null;
     /**
-     * @Groups({"inscription"})
+     * @Groups({"inscription","eleves"})
      */
     #[ORM\Column(length: 255)]
     private ?string $firstname = null;
